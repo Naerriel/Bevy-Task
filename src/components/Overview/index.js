@@ -7,11 +7,12 @@ import PropTypes from 'prop-types'
 import './index.styl'
 
 export default class Overview extends React.Component {
+    // Can change spans with className="label" to just labels
     render() {
         return (
             <section className="l-section c-overview" >
                 <h2 className="header" >Overview</h2>
-                <div className="content"> 
+                <div className="content">
                     <span className="label">Bio</span>
                     <p className="bio">{this.props.bio}</p>
                     <span className="label">Skillset</span>
@@ -22,7 +23,7 @@ export default class Overview extends React.Component {
                                     <span className="list-item">{`${skill}: `}</span>
                                     {this.props.skillset[skill]}
                                 </div>
-                            )
+                            );
                         })}
                     </div>
                 </div>

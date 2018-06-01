@@ -16,13 +16,19 @@ export default class Predictions extends React.Component {
                     {this.props.disciplines.map((discipline) => {
                         return (
                             <div key={discipline.name} className="c-discipline">
-                                <span className="name">{discipline.name}</span> - <span className="score">{disciplineScore(this.props.athlete.skillset, discipline.requirements)}</span>
+                                <span className="name">
+                                  {discipline.name}
+                                </span>
+                                -
+                                <span className="score">
+                                  {disciplineScore(this.props.athlete.skillset, discipline.requirements)}
+                                </span>
                             </div>
-                        )
+                        );
                     })}
                 </div>
             </section>
-        )
+        );
     }
 }
 

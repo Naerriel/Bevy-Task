@@ -15,7 +15,7 @@ export default class Home extends React.Component {
     render() {
         const athlete = this.props.athletes ? this.props.athletes[1] : null
         const disciplines = this.props.disciplines ? this.props.disciplines : []
-        if (athlete)
+        if (athlete){
             return (
                 <div className="p-home">
                     <Profile {...athlete} />
@@ -23,10 +23,13 @@ export default class Home extends React.Component {
                     <Predictions athlete={athlete} disciplines={disciplines} />
                     <Hints athlete={athlete} disciplines={disciplines} />
                 </div>
-            )
-        else 
-            return <span>No athlete data</span>
-    } 
+            );
+        } else {
+            return (
+              <span>No athlete data</span>
+            );
+        }
+    }
 }
 
 Home.propTypes = {
