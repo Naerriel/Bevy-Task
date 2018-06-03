@@ -9,6 +9,7 @@ import Overview from '../../components/Overview'
 import Predictions from '../../components/Predictions'
 import Hints from '../../components/Hints'
 import SwitchAthleteButtons from './SwitchAthleteButtons'
+import Tabs from './Tabs'
 
 import './index.styl'
 
@@ -16,9 +17,13 @@ export default class Home extends React.Component {
     constructor() {
         super();
 
-        this.state = { currAthlete: 0 };
+        this.state = {
+          currAthlete: 0,
+          currTab: "Overview"
+        };
         this.nextAthlete = this.nextAthlete.bind(this);
         this.prevAthlete = this.prevAthlete.bind(this);
+        this.switchTab = this.switchTab.bind(this);
     }
 
     nextAthlete() {
@@ -32,9 +37,26 @@ export default class Home extends React.Component {
         });
     }
 
+    switchTab(nextTab) {
+        this.setState({
+            currTab: nextTab
+        });
+    }
+
+    renderSwitch(currTab, athlete) {
+        const disciplines = this.props.disciplines ? this.props.disciplines : []
+        switch(currTab){
+            case 'Overview':
+                return <Overview {...athlete} />
+            case 'Predictions':
+                return <Predictions athlete={athlete} disciplines={disciplines} />
+            case 'Hints':
+                return <Hints athlete={athlete} disciplines={disciplines} />
+        }
+    }
+
     render() {
         const athlete = this.props.athletes ? this.props.athletes[this.state.currAthlete] : null
-        const disciplines = this.props.disciplines ? this.props.disciplines : []
         if (athlete){
             return (
                   <div className="p-home">
@@ -45,9 +67,11 @@ export default class Home extends React.Component {
                         prevAthlete={this.prevAthlete}
                       />
                       <Profile {...athlete} />
-                      <Overview {...athlete} />
-                      <Predictions athlete={athlete} disciplines={disciplines} />
-                      <Hints athlete={athlete} disciplines={disciplines} />
+                      <Tabs
+                        currTab={this.state.currTab}
+                        switchTab={this.switchTab}
+                      />
+                      {this.renderSwitch(this.state.currTab, athlete)}
                   </div>
             );
         } else {
