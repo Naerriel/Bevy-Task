@@ -4,11 +4,20 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { disciplineScore } from '../../libs/calculate'
+import { disciplineScore, skillScore } from '../../libs/calculate'
 import './index.styl'
 
 export default class Predictions extends React.Component {
     render() {
+        let predictionsTable = [...this.props.disciplines];
+        predictionsTable.map((discipline) => {
+            discipline.score = disciplineScore(this.props.athlete.skillset, discipline.requirements);
+            discipline.drilldown = {};
+            Object.keys(this.props.athlete.skillset).map((skill) => {
+                let score = skillScore(this.props.athlete.skillset[skill], discipline.requirements[skill]);
+                discipline.drilldown[skill] = score;
+            });
+        });
         return (
             <section className="l-section c-predictions" >
                 <h2 className="header" >Predictions</h2>
