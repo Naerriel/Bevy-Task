@@ -13,10 +13,21 @@ export default class Predictions extends React.Component {
 
         this.state = {
             sort: "none",
-            filter: "none"
+            filter: "none",
+            collapsedDiscipline: "none"
         };
         this.sortChange = this.sortChange.bind(this);
         this.filterChange = this.filterChange.bind(this);
+        this.collapseDiscipline = this.collapseDiscipline.bind(this);
+        this.renderDiscipline = this.renderDiscipline.bind(this);
+    }
+
+    componentWillMount() {
+        this.createPredictions(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.createPredictions(nextProps);
     }
 
     sortChange(e) {
@@ -27,53 +38,28 @@ export default class Predictions extends React.Component {
         this.setState({ filter: e.target.value });
     }
 
-    componentWillMount() {
-        this.createPredictions();
+    collapseDiscipline(e) {
+        if(this.state.collapsedDiscipline === e.target.id){
+            this.setState({ collapsedDiscipline: "none" });
+        } else {
+            this.setState({ collapsedDiscipline: e.target.id });
+        }
     }
 
-    createPredictions() {
-        let predictionsTable = [...this.props.disciplines];
+    createPredictions(props) {
+        let predictionsTable = [...props.disciplines];
         predictionsTable.map((discipline) => {
-            discipline.score = disciplineScore(this.props.athlete.skillset, discipline.requirements);
+            discipline.score = disciplineScore(props.athlete.skillset, discipline.requirements);
             discipline.drilldown = {};
-            Object.keys(this.props.athlete.skillset).map((skill) => {
-                let score = skillScore(this.props.athlete.skillset[skill], discipline.requirements[skill]);
+            Object.keys(props.athlete.skillset).map((skill) => {
+                let score = skillScore(props.athlete.skillset[skill], discipline.requirements[skill]);
                 discipline.drilldown[skill] = score;
             });
         });
         this.setState({ predictions: predictionsTable });
     }
 
-    disciplineHTML(discipline) {
-        return (
-            <div key={discipline.name} className="c-discipline">
-                <span className="name">
-                  {discipline.name}
-                </span>
-                <span className="score">
-                  {disciplineScore(this.props.athlete.skillset, discipline.requirements)}
-                </span>
-            </div>
-        );
-    }
-
-    switchFilter(filter) {
-        switch(filter){
-            case 'none':
-                return this.state.predictions.map((discipline) => this.disciplineHTML(discipline));
-            case 'individual':
-                return this.state.predictions.filter(function(discipline) {
-                    return discipline.isIndividual;
-                }).map((discipline) => this.disciplineHTML(discipline));
-            case 'team':
-                return this.state.predictions.filter(function(discipline) {
-                    return !discipline.isIndividual;
-                }).map((discipline) => this.disciplineHTML(discipline));
-        }
-    }
-
-    render() {
-
+    checkForSorting() {
         if(this.state.sort === "ascend") {
             this.state.predictions.sort(function(first, second) {
                 return first.score - second.score;
@@ -85,6 +71,108 @@ export default class Predictions extends React.Component {
                 return second.score - first.score;
             });
         }
+    }
+
+    renderFlag(isIndividual) {
+        if(isIndividual){
+            return "Individual";
+        } else {
+            return "Team";
+        }
+    }
+
+    renderScoreDrillDown(discipline) {
+        console.log("renderDrillDown");
+        return(
+            <div className="scoreDrillDown">
+                <p className="drillDownTitle">Score by skills:</p>
+                <span className="drillDownSkill">
+                    basic:
+                    <span className="drillDownScore">50</span>
+                </span>
+                <div className="drillDownSkills">
+                {Object.keys(discipline.drilldown).map((skill) => {
+                    return (
+                        <span className="drillDownSkill" key={`drill${skill}`}>
+                            {skill}:
+                            <span className="drillDownScore" key={`drillScore${skill}`}>
+                                {discipline.drilldown[skill]}
+                            </span>
+                        </span>
+                    );
+                })}
+                </div>
+            </div>
+        );
+    }
+
+    renderDiscipline(discipline) {
+        if(discipline.name === this.state.collapsedDiscipline){
+            return (
+                <div
+                    key={discipline.name}
+                    id={discipline.name}
+                    className="c-discipline collapsed"
+                    onClick={this.collapseDiscipline}
+                >
+                    <img src={discipline.photo} />
+                    <span className="name">
+                        {discipline.name}
+                    </span>
+                    <span className="score">
+                        Score: {discipline.score}
+                    </span>
+                    <span className="isIndividual">
+                        {this.renderFlag(discipline.isIndividual)}
+                    </span>
+                    <span className="tags">
+                        {discipline.tags.map((tag) => {
+                            return <p className="tag">#{tag}</p>;
+                        })}
+                    </span>
+                    {this.renderScoreDrillDown(discipline)}
+                </div>
+            );
+        } else {
+            return (
+                <div
+                    key={discipline.name}
+                    id={discipline.name}
+                    className="c-discipline"
+                    onClick={this.collapseDiscipline}
+                >
+                    <img src={discipline.photo} />
+                    <span className="name">
+                        {discipline.name}
+                    </span>
+                    <span className="score">
+                        Score: {discipline.score}
+                    </span>
+                    <span className="isIndividual">
+                        {this.renderFlag(discipline.isIndividual)}
+                    </span>
+                </div>
+            );
+        }
+    }
+
+    switchFilter(filter) {
+        switch(filter){
+            case 'none':
+                return this.state.predictions.map((discipline) => this.renderDiscipline(discipline));
+            case 'individual':
+                return this.state.predictions.filter(function(discipline) {
+                    return discipline.isIndividual;
+                }).map((discipline) => this.renderDiscipline(discipline));
+            case 'team':
+                return this.state.predictions.filter(function(discipline) {
+                    return !discipline.isIndividual;
+                }).map((discipline) => this.renderDiscipline(discipline));
+        }
+    }
+
+    render() {
+        this.checkForSorting();
 
         return (
             <section className="l-section c-predictions" >
