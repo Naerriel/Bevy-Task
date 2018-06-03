@@ -47,8 +47,8 @@ export default class Predictions extends React.Component {
     }
 
     createPredictions(props) {
-        let predictionsTable = [...props.disciplines];
-        predictionsTable.map((discipline) => {
+        let predictions = [...props.disciplines];
+        predictions.map((discipline) => {
             discipline.score = disciplineScore(props.athlete.skillset, discipline.requirements);
             discipline.drilldown = {};
             Object.keys(props.athlete.skillset).map((skill) => {
@@ -56,7 +56,7 @@ export default class Predictions extends React.Component {
                 discipline.drilldown[skill] = score;
             });
         });
-        this.setState({ predictions: predictionsTable });
+        this.setState({ predictions });
     }
 
     checkForSorting() {
