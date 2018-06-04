@@ -60,16 +60,27 @@ export default class Predictions extends React.Component {
     }
 
     checkForSorting() {
-        if(this.state.sort === "ascend") {
-            this.state.predictions.sort(function(first, second) {
-                return first.score - second.score;
-            });
-        }
-
-        if(this.state.sort === "descend") {
-            this.state.predictions.sort(function(first, second) {
-                return second.score - first.score;
-            });
+        switch(this.state.sort) {
+            case 'alphabetical':
+                this.state.predictions.sort(function(first, second) {
+                    return first.name.localeCompare(second.name);
+                });
+                break;
+            case 'anti-alphabetical':
+                this.state.predictions.sort(function(first, second) {
+                    return second.name.localeCompare(first.name);
+                });
+                break;
+            case 'ascend':
+                this.state.predictions.sort(function(first, second) {
+                    return first.score - second.score;
+                });
+                break;
+            case 'descend':
+                this.state.predictions.sort(function(first, second) {
+                    return second.score - first.score;
+                });
+                break;
         }
     }
 
@@ -184,6 +195,8 @@ export default class Predictions extends React.Component {
                 <label>Sort by:</label>
                 <select onChange={this.sortChange} value={this.state.sort}>
                     <option value="none">Don't sort</option>
+                    <option value="alphabetical">Alphabetical</option>
+                    <option value="anti-alphabetical">Anti-alphabetical</option>
                     <option value="ascend">Score ascending</option>
                     <option value="descend">Score descending</option>
                 </select>

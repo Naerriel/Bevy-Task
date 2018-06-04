@@ -12,7 +12,7 @@ We really appreciate your time and effort, thanks again for applying and see you
 
 # Requirements
 
-### TL;DR 
+### TL;DR
 Use this code as a bootstrap for your project, do your thing and then send us the results as a .zip package.
 
 ### Development
