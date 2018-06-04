@@ -64,7 +64,6 @@ export default class Hints extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <section className="l-section c-hints" >
                 <h2 className="header" >Hints</h2>
@@ -72,13 +71,17 @@ export default class Hints extends React.Component {
                     <div className="column">
                         <span className="hintHeader">Should try disciplines:</span>
                         {this.state.shouldTryDisciplines.map((discipline) => {
-                            return <span>- {discipline.name} </span>;
+                            return <span key={`hint${discipline.name}`}>
+                              - {discipline.name}
+                            </span>;
                         })}
                     </div>
                     <div className="column">
                         <span className="hintHeader">Should avoid disciplines:</span>
                         {this.state.shouldAvoidDisciplines.map((discipline) => {
-                            return <span>- {discipline.name} </span>;
+                            return <span key={`hint${discipline.name}`}>
+                              - {discipline.name}
+                            </span>;
                         })}
                     </div>
                 </div>
