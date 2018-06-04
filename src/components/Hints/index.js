@@ -52,14 +52,14 @@ export default class Hints extends React.Component {
         predictions.sort(function(first, second){
             return first.score - second.score;
         });
-        let shouldTrySkills = [];
-        let shouldAvoidSkills = [];
-        this.temporaryName(predictions, props, shouldAvoidSkills);
+        let shouldTryDisciplines = [];
+        let shouldAvoidDisciplines = [];
+        this.temporaryName(predictions, props, shouldAvoidDisciplines);
         predictions.reverse();
-        this.temporaryName(predictions, props, shouldTrySkills);
+        this.temporaryName(predictions, props, shouldTryDisciplines);
         this.setState({
-            shouldTrySkills,
-            shouldAvoidSkills
+            shouldTryDisciplines,
+            shouldAvoidDisciplines
         });
     }
 
@@ -69,7 +69,18 @@ export default class Hints extends React.Component {
             <section className="l-section c-hints" >
                 <h2 className="header" >Hints</h2>
                 <div className="content">
-                    <span>...</span>
+                    <div className="column">
+                        <span className="hintHeader">Should try disciplines:</span>
+                        {this.state.shouldTryDisciplines.map((discipline) => {
+                            return <span>- {discipline.name} </span>;
+                        })}
+                    </div>
+                    <div className="column">
+                        <span className="hintHeader">Should avoid disciplines:</span>
+                        {this.state.shouldAvoidDisciplines.map((discipline) => {
+                            return <span>- {discipline.name} </span>;
+                        })}
+                    </div>
                 </div>
             </section>
         )
