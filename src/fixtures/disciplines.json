@@ -313,7 +313,7 @@
     },
     {
         "name": "Archery",
-        "photo": "https://en.wikipedia.org/wiki/File:Archery_pictogram.svg",
+        "photo": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Archery_pictogram.svg",
         "isIndividual" :true,
         "tags": [],
         "requirements": {
