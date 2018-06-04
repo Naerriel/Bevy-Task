@@ -22,16 +22,16 @@ export default class Hints extends React.Component {
         this.createHints(nextProps);
     }
 
-    notNative(disciplineName, nativeDisciplines) {
+    isNotNative(disciplineName, nativeDisciplines) {
         nativeDisciplines.forEach((nativeDisciplineName) => {
             if(nativeDisciplineName === disciplineName) return false;
         });
         return true;
     }
 
-    temporaryName(predictions, props, array) {
+    fillExtremeSkills(predictions, props, array) {
         predictions.forEach((prediction) => {
-            if(this.notNative(prediction.name, props.athlete.nativeDisciplines)){
+            if(this.isNotNative(prediction.name, props.athlete.nativeDisciplines)){
                 if(array.length < 3 || array.slice(-1).pop().score === prediction.score){
                     array.push(prediction);
                 }
@@ -54,9 +54,11 @@ export default class Hints extends React.Component {
         });
         let shouldTryDisciplines = [];
         let shouldAvoidDisciplines = [];
-        this.temporaryName(predictions, props, shouldAvoidDisciplines);
+
+        this.fillExtremeSkills(predictions, props, shouldAvoidDisciplines);
         predictions.reverse();
-        this.temporaryName(predictions, props, shouldTryDisciplines);
+        this.fillExtremeSkills(predictions, props, shouldTryDisciplines);
+
         this.setState({
             shouldTryDisciplines,
             shouldAvoidDisciplines

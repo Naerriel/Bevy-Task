@@ -16,9 +16,9 @@ export default class Predictions extends React.Component {
             filter: "none",
             collapsedDiscipline: "none"
         };
-        this.sortChange = this.sortChange.bind(this);
-        this.filterChange = this.filterChange.bind(this);
-        this.collapseDiscipline = this.collapseDiscipline.bind(this);
+        this.handleSortChange = this.handleSortChange.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.handleCollapsing = this.handleCollapsing.bind(this);
         this.renderDiscipline = this.renderDiscipline.bind(this);
     }
 
@@ -30,19 +30,20 @@ export default class Predictions extends React.Component {
         this.createPredictions(nextProps);
     }
 
-    sortChange(e) {
+    handleSortChange(e) {
         this.setState({ sort: e.target.value });
     }
 
-    filterChange(e) {
+    handleFilterChange(e) {
         this.setState({ filter: e.target.value });
     }
 
-    collapseDiscipline(e) {
-        if(this.state.collapsedDiscipline === e.target.id){
+    handleCollapsing(e) {
+        let discipline = e.target.id.replace("body", "");
+        if(this.state.collapsedDiscipline === discipline){
             this.setState({ collapsedDiscipline: "none" });
         } else {
-            this.setState({ collapsedDiscipline: e.target.id });
+            this.setState({ collapsedDiscipline: discipline });
         }
     }
 
@@ -59,7 +60,7 @@ export default class Predictions extends React.Component {
         this.setState({ predictions });
     }
 
-    checkForSorting() {
+    sortPredictions() {
         switch(this.state.sort) {
             case 'alphabetical':
                 this.state.predictions.sort(function(first, second) {
@@ -90,8 +91,8 @@ export default class Predictions extends React.Component {
         }
     }
 
-    renderFlag(isIndividual) {
-        if(isIndividual){
+    renderFlag(isIndividualFlag) {
+        if(isIndividualFlag){
             return "Individual";
         } else {
             return "Team";
@@ -122,6 +123,26 @@ export default class Predictions extends React.Component {
         );
     }
 
+    renderDisciplineBody(discipline) {
+        return (
+            <div
+                className="disciplineBody"
+                id={`body${discipline.name}`}
+            >
+                <img src={discipline.photo} />
+                <span className="name">
+                    {discipline.name}
+                </span>
+                <span className="score">
+                    Score: {discipline.score}
+                </span>
+                <span className="isIndividual">
+                    {this.renderFlag(discipline.isIndividual)}
+                </span>
+            </div>
+       );
+    }
+
     renderDiscipline(discipline) {
         if(discipline.name === this.state.collapsedDiscipline){
             return (
@@ -129,18 +150,9 @@ export default class Predictions extends React.Component {
                     key={discipline.name}
                     id={discipline.name}
                     className="c-discipline collapsed"
-                    onClick={this.collapseDiscipline}
+                    onClick={this.handleCollapsing}
                 >
-                    <img src={discipline.photo} />
-                    <span className="name">
-                        {discipline.name}
-                    </span>
-                    <span className="score">
-                        Score: {discipline.score}
-                    </span>
-                    <span className="isIndividual">
-                        {this.renderFlag(discipline.isIndividual)}
-                    </span>
+                    {this.renderDisciplineBody(discipline)}
                     <span className="tags">
                         {discipline.tags.map((tag) => {
                             return <p
@@ -160,24 +172,15 @@ export default class Predictions extends React.Component {
                     key={discipline.name}
                     id={discipline.name}
                     className="c-discipline"
-                    onClick={this.collapseDiscipline}
+                    onClick={this.handleCollapsing}
                 >
-                    <img src={discipline.photo} />
-                    <span className="name">
-                        {discipline.name}
-                    </span>
-                    <span className="score">
-                        Score: {discipline.score}
-                    </span>
-                    <span className="isIndividual">
-                        {this.renderFlag(discipline.isIndividual)}
-                    </span>
+                    {this.renderDisciplineBody(discipline)}
                 </div>
             );
         }
     }
 
-    switchFilter(filter) {
+    filterPredictions(filter) {
         switch(filter){
             case 'none':
                 return this.state.predictions.map((discipline) => this.renderDiscipline(discipline));
@@ -193,13 +196,16 @@ export default class Predictions extends React.Component {
     }
 
     render() {
-        this.checkForSorting();
+        this.sortPredictions();
 
         return (
             <section className="l-section c-predictions" >
                 <h2 className="header" >Predictions</h2>
                 <label>Sort by:</label>
-                <select onChange={this.sortChange} value={this.state.sort}>
+                <select
+                  onChange={this.handleSortChange}
+                  value={this.state.sort}
+                >
                     <option value="none">Don't sort</option>
                     <option value="alphabetical">Alphabetical</option>
                     <option value="anti-alphabetical">Anti-alphabetical</option>
@@ -207,13 +213,16 @@ export default class Predictions extends React.Component {
                     <option value="descend">Score descending</option>
                 </select>
                 <label>Filter:</label>
-                <select onChange={this.filterChange} value={this.state.filter}>
+                <select
+                  onChange={this.handleFilterChange}
+                  value={this.state.filter}
+                >
                     <option value="none">None</option>
                     <option value="individual">Individual sport</option>
                     <option value="team">Team sport</option>
                 </select>
                 <div className="content">
-                    {this.switchFilter(this.state.filter)}
+                    {this.filterPredictions(this.state.filter)}
                 </div>
             </section>
         );

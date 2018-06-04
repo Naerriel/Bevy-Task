@@ -15,7 +15,6 @@ import aesthetics from './assets/aesthetics.png'
 const maxLevel = 5;
 
 export default class Overview extends React.Component {
-    // Can change spans with className="label" to just labels
     resetExtremeSkills() {
         Object.keys(this.props.skillset).map((skill) => {
             let thisSkill = document.querySelector(`#${skill}`);
