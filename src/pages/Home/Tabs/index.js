@@ -12,7 +12,7 @@ export default class Tabs extends React.Component {
         super(props);
 
         this.state = { currTab: props.currTab };
-        this.tabChange = this.tabChange.bind(this);
+        this.handleTabClick = this.handleTabClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -42,20 +42,20 @@ export default class Tabs extends React.Component {
         }
     }
 
-    tabChange(e) {
-        this.props.switchTab(e.target.innerHTML);
+    handleTabClick(e) {
+        this.props.handleTabChange(e.target.innerHTML);
     }
 
     render() {
         return (
             <div className="tabs">
-                <span className="tab" id="overview" onClick={this.tabChange}>
+                <span className="tab" id="overview" onClick={this.handleTabClick}>
                     Overview
                 </span>
-                <span className="tab" id="predictions" onClick={this.tabChange}>
+                <span className="tab" id="predictions" onClick={this.handleTabClick}>
                     Predictions
                 </span>
-                <span className="tab" id="hints" onClick={this.tabChange}>
+                <span className="tab" id="hints" onClick={this.handleTabClick}>
                     Hints
                 </span>
             </div>

@@ -23,7 +23,7 @@ export default class Home extends React.Component {
         };
         this.nextAthlete = this.nextAthlete.bind(this);
         this.prevAthlete = this.prevAthlete.bind(this);
-        this.switchTab = this.switchTab.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
     }
 
     nextAthlete() {
@@ -31,19 +31,20 @@ export default class Home extends React.Component {
             currAthlete: this.state.currAthlete + 1
         });
     }
+
     prevAthlete() {
         this.setState({
             currAthlete: this.state.currAthlete - 1
         });
     }
 
-    switchTab(nextTab) {
+    handleTabChange(nextTab) {
         this.setState({
             currTab: nextTab
         });
     }
 
-    renderSwitch(currTab, athlete) {
+    renderCurrTab(currTab, athlete) {
         const disciplines = this.props.disciplines ? this.props.disciplines : []
         switch(currTab){
             case 'Overview':
@@ -69,9 +70,9 @@ export default class Home extends React.Component {
                       <Profile {...athlete} />
                       <Tabs
                         currTab={this.state.currTab}
-                        switchTab={this.switchTab}
+                        handleTabChange={this.handleTabChange}
                       />
-                      {this.renderSwitch(this.state.currTab, athlete)}
+                      {this.renderCurrTab(this.state.currTab, athlete)}
                   </div>
             );
         } else {

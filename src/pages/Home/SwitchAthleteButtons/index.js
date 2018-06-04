@@ -15,14 +15,14 @@ export default class SwitchAthleteButtons extends React.Component {
             currAthlete: props.currAthlete,
             maxAthleteNum: props.maxAthleteNum
         };
-        this.keyDown = this.keyDown.bind(this);
+        this.handleArrowKeys = this.handleArrowKeys.bind(this);
     }
 
     componentWillMount() {
-        document.addEventListener("keydown", this.keyDown, false);
+        document.addEventListener("keydown", this.handleArrowKeys, false);
     }
     componentWillUnmount() {
-        document.removeEventListener("keydown", this.keyDown, false);
+        document.removeEventListener("keydown", this.handleArrowKeys, false);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -32,12 +32,12 @@ export default class SwitchAthleteButtons extends React.Component {
         });
         let prevBtn = document.querySelector(".prevAthleteBtn");
         let nextBtn = document.querySelector(".nextAthleteBtn");
-        if(nextProps.currAthlete <= 0) {
+        if(this.isAthleteFirst(nextProps.currAthlete)) {
             this.disableButton(prevBtn);
         } else {
             this.enableButton(prevBtn);
         }
-        if(nextProps.currAthlete + 1 >= nextProps.maxAthleteNum) {
+        if(this.isAthleteLast(nextProps.currAthlete, nextProps.maxAthleteNum)) {
             this.disableButton(nextBtn);
         } else {
             this.enableButton(nextBtn);
@@ -45,12 +45,20 @@ export default class SwitchAthleteButtons extends React.Component {
     }
 
     componentDidMount() {
-        if(this.state.currAthlete === 0){
+        if(this.isAthleteFirst(this.state.currAthlete)){
             this.disableButton(document.querySelector(".prevAthleteBtn"));
         }
-        if(this.state.currAthlete + 1 === this.state.maxAthleteNum){
+        if(this.isAthleteLast(this.state.currAthlete, this.state.maxAthleteNum)){
             this.disableButton(document.querySelector(".nextAthleteBtn"));
         }
+    }
+
+    isAthleteFirst(currAthlete) {
+        return currAthlete === 0;
+    }
+
+    isAthleteLast(currAthlete, maxAthleteNum) {
+        return currAthlete + 1 === maxAthleteNum;
     }
 
     disableButton(btn) {
@@ -63,7 +71,7 @@ export default class SwitchAthleteButtons extends React.Component {
         btn.style.display = "block";
     }
 
-    keyDown(e) {
+    handleArrowKeys(e) {
         if(e.key === "ArrowLeft" && this.state.currAthlete != 0){
             this.props.prevAthlete();
         }
@@ -74,7 +82,7 @@ export default class SwitchAthleteButtons extends React.Component {
 
     render() {
         return (
-            <div className="switchAthleteButtons" onKeyPress={this.keyPress}>
+            <div className="switchAthleteButtons">
                 <button
                     className="prevAthleteBtn"
                     onClick={this.props.prevAthlete}>
