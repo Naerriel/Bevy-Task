@@ -82,7 +82,6 @@ export default class Predictions extends React.Component {
     }
 
     renderScoreDrillDown(discipline) {
-        console.log("renderDrillDown");
         return(
             <div className="scoreDrillDown">
                 <p className="drillDownTitle">Score by skills:</p>
@@ -127,7 +126,12 @@ export default class Predictions extends React.Component {
                     </span>
                     <span className="tags">
                         {discipline.tags.map((tag) => {
-                            return <p className="tag">#{tag}</p>;
+                            return <p
+                              className="tag"
+                              key={`tag${discipline.name}${tag}`}
+                            >
+                              #{tag}
+                            </p>;
                         })}
                     </span>
                     {this.renderScoreDrillDown(discipline)}
