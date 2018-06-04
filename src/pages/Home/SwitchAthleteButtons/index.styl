@@ -36,3 +36,37 @@
     border-top 15px solid transparent
     border-bottom 15px solid transparent
     border-right 25px solid white
+
+@media screen and (max-width: 900px)
+    .switchAthleteButtons
+        position relative
+
+    .nextAthleteBtn, .prevAthleteBtn
+        position absolute
+        top 10px
+
+    .nextAthleteBtn
+        right 10px
+
+    .prevAthleteBtn
+        right 80px
+        left auto
+
+
+@media screen and (max-width: 550px)
+    .switchAthleteButtons
+        position static
+        background-color red
+        top 0
+
+    .nextAthleteBtn, .prevAthleteBtn
+        transform: scale(0.5);
+        top 0
+
+    .nextAthleteBtn
+        right 10px
+
+    .prevAthleteBtn
+        right auto
+        left 10px
+
