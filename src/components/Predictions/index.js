@@ -73,11 +73,17 @@ export default class Predictions extends React.Component {
                 break;
             case 'ascend':
                 this.state.predictions.sort(function(first, second) {
+                    if(first.score === second.score) {
+                        return first.name.localeCompare(second.name);
+                    }
                     return first.score - second.score;
                 });
                 break;
             case 'descend':
                 this.state.predictions.sort(function(first, second) {
+                    if(first.score === second.score) {
+                        return second.name.localeCompare(first.name);
+                    }
                     return second.score - first.score;
                 });
                 break;
